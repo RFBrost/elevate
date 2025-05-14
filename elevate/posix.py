@@ -44,11 +44,10 @@ def elevate(show_console=True, graphical=True):
             commands.append(["gksudo"] + args)
             commands.append(["kdesudo"] + args)
 
-    commands.append(["sudo"] + args)
-
+    commands.append(["sudo", "-E"] + args)
     for args in commands:
         try:
             os.execlp(args[0], *args)
         except OSError as e:
             if e.errno != errno.ENOENT or args[0] == "sudo":
-                raise
+                 raise
