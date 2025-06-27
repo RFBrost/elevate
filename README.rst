@@ -41,4 +41,8 @@ new console window. To suppress this window, use
 ``elevate(show_console=False)``.
 
 On Linux and macOS, graphical prompts are tried before ``sudo`` by default. To
-prevent graphical prompts, use ``elevate(graphical=False)``.
+prevent graphical prompts, use ``elevate(graphical=False)``. 
+
+For macOS non-graphical prompts (i.e. sudo) you can use 
+``elevate(graphical=False, preserve_env=True)`` and the relaunch as root will 
+preserve the shell environment.
