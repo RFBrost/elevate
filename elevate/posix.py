@@ -1,6 +1,7 @@
 import errno
 import os
 import sys
+
 try:
     from shlex import quote
 except ImportError:
@@ -12,7 +13,7 @@ def quote_shell(args):
 
 
 def quote_applescript(string):
-    charmap = {
+    charmap: str = {
         "\n": "\\n",
         "\r": "\\r",
         "\t": "\\t",
@@ -22,12 +23,12 @@ def quote_applescript(string):
     return '"%s"' % "".join(charmap.get(char, char) for char in string)
 
 
-def elevate(show_console=True, graphical=True):
+def elevate(show_console=True, graphical=True, preserve_env=False):
     if os.getuid() == 0:
         return
 
-    args = [sys.executable] + sys.argv
-    commands = []
+    args: str = [sys.executable] + sys.argv
+    commands: list = []
 
     if graphical:
         if sys.platform.startswith("darwin"):
@@ -44,7 +45,11 @@ def elevate(show_console=True, graphical=True):
             commands.append(["gksudo"] + args)
             commands.append(["kdesudo"] + args)
 
-    commands.append(["sudo", "-E"] + args)
+    if preserve_env:
+        commands.append(["sudo", "-E"] + args)
+    else:
+        commands.append(["sudo"] + args)
+
     for args in commands:
         try:
             os.execlp(args[0], *args)
